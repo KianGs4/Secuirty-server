@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM hub.hamdocker.ir/node:18-alpine
 
 WORKDIR /app
 

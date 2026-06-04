@@ -14,6 +14,11 @@ jobs:
         cat > /tmp/docker-auth.json <<'EOF'
         ${{secrets.DOCKER_AUTH_CONFIG}}
         EOF
+        # Validate JSON before proceeding
+        if ! jq empty /tmp/docker-auth.json 2>/dev/null; then
+          echo "Error: DOCKER_AUTH_CONFIG secret contains invalid JSON"
+          exit 1
+        fi
         darkube build --push -t $IMAGE_NAME:${GITHUB_SHA:0:7} -t $IMAGE_NAME:${GITHUB_REF_NAME} \
           --docker-auth-config /tmp/docker-auth.json --workdir . --file ./Dockerfile \
           --build-context .
